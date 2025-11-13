@@ -28,3 +28,12 @@ winget install -s winget Microsoft.DotNet.AspNetCore.8
 dotnet tool install --global dotnet-ef --version 8.0.*
 dotnet tool install --global dotnet-aspnet-codegenerator --version 8.0.*
 ```
+
+## Cmds
+
+```
+dotnet new console -f net8.0
+dotnet add reference ../Lab2
+
+dotnet run
+```
