@@ -33,4 +33,7 @@ obj/
 
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,visualstudiocode
 
-.nuget
+.nuget/
+dist/
+
+*.db
