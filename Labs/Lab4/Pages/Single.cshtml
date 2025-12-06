@@ -1,0 +1,26 @@
+@page "{image}"
+@model Lab4.Pages.SingleModel
+@{
+    ViewData["Title"] = "Podgląd obrazka";
+}
+
+@if (!string.IsNullOrEmpty(Model.Image))
+{
+    <div class="container text-center mt-4">
+        <h1>Podgląd obrazka</h1>
+        <img src="~/images/@Model.Image" class="img-fluid mb-3" alt="@Model.Image" />
+        <div class="mb-3">
+            <a asp-page="Index" class="btn btn-secondary">Powrót do galerii</a>
+        </div>
+        <form method="post" onsubmit="return confirm('Czy na pewno chcesz usunąć ten obraz?');">
+            <input type="hidden" name="image" value="@Model.Image" />
+            <button type="submit" asp-page-handler="Delete" class="btn btn-danger">Usuń obraz</button>
+        </form>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger mt-4 text-center">
+        Nie znaleziono obrazka.
+    </div>
+}

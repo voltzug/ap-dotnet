@@ -1,0 +1,50 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Strona główna";
+}
+
+<div>
+    <h2>Galeria</h2>
+
+    @if (Model.Images != null && Model.Images.Count > 0)
+    {
+        <div class="d-flex flex-column align-items-center">
+            @foreach (var item in Model.Images)
+            {
+                <partial name="_Image" model="item" />
+            }
+        </div>
+    }
+    else
+    {
+        <p>Brak przesłanych obrazów.</p>
+    }
+</div>
+
+<div class="mt-3">
+    <a asp-page="Upload" class="btn btn-secondary">Przejdź do strony przesyłania</a>
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('uploadForm');
+        var input = document.getElementById('uploadInput');
+        if (!form || !input) return;
+        // Pass the C# image list to JS as a JSON array
+        var existing = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Images));
+        form.addEventListener('submit', function (e) {
+            var file = input.files && input.files[0];
+            if (!file) return;
+            var fileName = file.name;
+            if (existing.includes(fileName)) {
+                if (!confirm('Plik o tej nazwie już istnieje. Czy chcesz go nadpisać?')) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+    });
+</script>
+}

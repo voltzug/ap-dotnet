@@ -1,0 +1,81 @@
+@page
+@model UploadModel
+@{
+    ViewData["Title"] = "Prześlij plik";
+}
+
+<div class="container mt-4">
+    <h1>Prześlij plik</h1>
+
+    <div class="mb-3">
+        <a asp-page="Index" class="btn btn-secondary">Powrót do galerii</a>
+    </div>
+
+    <form id="uploadForm" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="Upload" class="form-label">Wybierz plik</label>
+            <input asp-for="Upload" type="file" class="form-control" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" />
+            <span asp-validation-for="Upload" class="text-danger"></span>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ExistingFileName))
+        {
+            <div class="alert alert-warning" role="alert">
+                <strong>Uwaga:</strong> Plik o nazwie <em>@Model.ExistingFileName</em> już istnieje.
+                Aby go nadpisać, zaznacz pole <em>Nadpisz istniejący plik</em> i wyślij formularz ponownie,
+                lub wybierz inny plik.
+            </div>
+
+            <input type="hidden" id="existingFileName" value="@Model.ExistingFileName" />
+
+            <div class="form-check mb-3">
+                <input asp-for="Overwrite" class="form-check-input" />
+                <label asp-for="Overwrite" class="form-check-label">Nadpisz istniejący plik</label>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Prześlij</button>
+    </form>
+
+    <hr />
+
+    <div class="mt-4">
+        <h2>Porady</h2>
+        <ul>
+            <li>Akceptowane formaty: JPG, PNG, GIF, BMP, TIFF.</li>
+            <li>Jeśli plik o tej samej nazwie już istnieje, możesz go nadpisać.</li>
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            document.addEventListener('DOMContentLoaded', function () {
+                var form = document.getElementById('uploadForm');
+                if (!form) return;
+
+                form.addEventListener('submit', function (e) {
+                    var existing = document.getElementById('existingFileName');
+                    if (!existing || !existing.value) return;
+
+                    var overwrite = document.getElementById('Overwrite');
+                    // If overwrite checkbox is not present or not checked, ask for confirmation
+                    if (!overwrite || !overwrite.checked) {
+                        var message = 'Plik o tej nazwie już istnieje. Czy chcesz go nadpisać?';
+                        if (!confirm(message)) {
+                            e.preventDefault();
+                            return false;
+                        }
+                        // If user confirmed, ensure overwrite is checked so server knows
+                        if (overwrite) overwrite.checked = true;
+                    }
+                });
+            });
+        })();
+    </script>
+}

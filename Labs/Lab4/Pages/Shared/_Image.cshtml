@@ -1,0 +1,6 @@
+@model string
+@using System.Net
+
+<a asp-page="/Single" asp-route-image="@WebUtility.UrlEncode(Model)" class="d-block mb-3 text-center">
+    <img src="~/images/@Model" width="300" class="img-thumbnail" alt="@Model" />
+</a>
