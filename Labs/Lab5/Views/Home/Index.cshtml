@@ -1,0 +1,20 @@
+﻿@using Lab5.Data
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Ta aplikacja prezentuje mini implementację zarządzania filmami.</p>
+    @if (DbState.IsDbUp)
+    {
+        <p>
+            <a href="/Movies" class="btn btn-primary" style="font-size:1.2em;">Przejdź do listy filmów</a>
+        </p>
+    }
+    else
+    {
+        <p class="text-danger" style="font-weight:bold;">Błąd połączenia z bazą danych lub brak tabeli Movies. Skontaktuj się z administratorem.</p>
+    }
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>

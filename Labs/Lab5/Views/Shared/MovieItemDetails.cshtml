@@ -1,0 +1,49 @@
+@model Lab5.Models.Movie
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Szczegóły filmu</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Tytuł:</dt>
+            <dd class="col-sm-9">@Model.Title</dd>
+
+            <dt class="col-sm-3">Opis:</dt>
+            <dd class="col-sm-9">@Model.Description</dd>
+
+            <dt class="col-sm-3">Ocena:</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(m => m.Rating)</dd>
+
+            <dt class="col-sm-3">Zwiastun:</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.TrailerLink))
+                {
+                    var embedUrl = Model.TrailerLink;
+                    if (embedUrl.Contains("watch?v="))
+                    {
+                        embedUrl = embedUrl.Replace("watch?v=", "embed/");
+                    }
+                    else if (embedUrl.Contains("youtu.be/"))
+                    {
+                        embedUrl = embedUrl.Replace("youtu.be/", "youtube.com/embed/");
+                    }
+                    <div class="mb-2">
+                        @await Html.PartialAsync("~/Views/Shared/ExternalLink.cshtml", new Lab5.Models.ExternalLinkModel { Url = Model.TrailerLink, Text = "Otwórz zwiastun w nowej karcie" })
+                    </div>
+                    <div class="ratio ratio-16x9">
+                        <iframe src="@embedUrl"
+                                title="Zwiastun"
+                                allowfullscreen
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                class="rounded border"></iframe>
+                    </div>
+                }
+                else
+                {
+                    <span class="text-muted">Brak zwiastuna</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>

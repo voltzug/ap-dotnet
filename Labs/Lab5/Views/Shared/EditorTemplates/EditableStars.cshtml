@@ -1,0 +1,47 @@
+@model int
+
+@{
+    var currentRating = Model;
+    var maxStars = 5;
+    var inputId = (ViewData.TemplateInfo.HtmlFieldPrefix ?? "Rating").Replace(".", "_");
+    var fieldName = ViewData.TemplateInfo.GetFullHtmlFieldName("");
+}
+
+<div id="star-selector-@inputId" style="font-size:2em;">
+    @for (int i = 1; i <= maxStars; i++)
+    {
+        <span class="star"
+              style="cursor:pointer; color:@(i <= currentRating ? "#ffc107" : "#e4e5e9");"
+              onclick="setRating_@(inputId)(@(i))"
+              onmouseover="highlightStars_@(inputId)(@(i))"
+              onmouseout="resetStars_@(inputId)()">
+            &#x2605;
+        </span>
+    }
+    <input type="hidden" id="Rating-@inputId" name="@fieldName" value="@(currentRating)" />
+    <span id="ratingValue-@inputId" class="ms-2">@currentRating/5</span>
+</div>
+<script>
+    (function() {
+        var selectedRating = parseInt(document.getElementById('Rating-@inputId')?.value) || 0;
+        window['setRating_@inputId'] = function(rating) {
+            document.getElementById('Rating-@inputId').value = rating;
+            document.getElementById('ratingValue-@inputId').innerText = rating + '/5';
+            selectedRating = rating;
+            window['highlightStars_@inputId'](rating);
+        }
+        window['highlightStars_@inputId'] = function(rating) {
+            var stars = document.querySelectorAll('#star-selector-@inputId .star');
+            for (var i = 0; i < stars.length; i++) {
+                stars[i].style.color = (i < rating) ? "#ffc107" : "#e4e5e9";
+            }
+        }
+        window['resetStars_@inputId'] = function() {
+            window['highlightStars_@inputId'](selectedRating);
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            selectedRating = parseInt(document.getElementById('Rating-@inputId').value) || 0;
+            window['highlightStars_@inputId'](selectedRating);
+        });
+    })();
+</script>

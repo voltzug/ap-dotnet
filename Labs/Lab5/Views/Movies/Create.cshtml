@@ -1,0 +1,38 @@
+@model Lab5.Models.Movie
+
+@{
+    ViewData["Title"] = "Dodaj nowy film";
+}
+
+Dodaj nowy film
+
+<form asp-action="Create">
+    <div>
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        @Html.EditorFor(m => m.Description)
+        <span class="form-text text-muted">Opis jest opcjonalny.</span>
+    </div>
+    <div>
+        <label asp-for="Rating"></label>
+        @Html.EditorFor(m => m.Rating, "EditableStars")
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="TrailerLink"></label>
+        <input asp-for="TrailerLink" class="form-control" />
+        <span asp-validation-for="TrailerLink" class="text-danger"></span>
+    </div>
+    <div>
+        <input type="submit" value="Dodaj" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Powrót do listy</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

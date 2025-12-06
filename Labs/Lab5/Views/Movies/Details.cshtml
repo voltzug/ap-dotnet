@@ -1,0 +1,8 @@
+@model Lab5.Models.Movie
+
+
+
+@await Html.PartialAsync("~/Views/Shared/MovieItemDetails.cshtml", Model)
+
+@Html.ActionLink("Edytuj", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+@Html.ActionLink("Powrót do listy", "Index", "Movies", null, new { @class = "btn btn-secondary" })

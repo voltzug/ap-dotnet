@@ -1,0 +1,22 @@
+@model int
+
+@{
+    var rating = Model;
+    var maxStars = 5;
+    var filledStar = "&#x2605;";
+    var emptyStar = "&#x2606;";
+}
+
+<span title="Ocena: @rating/5">
+@for (int i = 0; i < maxStars; i++)
+{
+    if (i < rating)
+    {
+        @Html.Raw(filledStar)
+    }
+    else
+    {
+        @Html.Raw(emptyStar)
+    }
+}
+</span>

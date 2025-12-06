@@ -1,0 +1,11 @@
+@model IEnumerable<Lab5.Models.Movie>
+
+@{
+    ViewData["Title"] = "Lista filmów";
+}
+
+Lista filmów
+
+@await Html.PartialAsync("~/Views/Shared/MovieTableView.cshtml", Model)
+
+@Html.ActionLink("Dodaj nowy film", "Create", "Movies", null, new { @class = "btn btn-primary" })

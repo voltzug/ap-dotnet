@@ -1,0 +1,13 @@
+@model Lab5.Models.Movie
+
+<div class="mb-3">
+    <h2 class="text-danger">Czy na pewno chcesz usunąć ten film?</h2>
+</div>
+
+@await Html.PartialAsync("~/Views/Shared/MovieItemDetails.cshtml", Model)
+
+<form asp-action="Delete" method="post" class="mt-3">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger me-2">Usuń</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>

@@ -1,0 +1,13 @@
+# podman run --name ap-dotnet --rm -it -v ./Labs:/Labs -v ./Labs/.nuget:/root/.nuget -w /Labs -p 127.0.0.1:8080:8080 mcr.microsoft.com/dotnet/sdk:8.0
+version: "3.8"
+
+services:
+  dotnet:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    volumes:
+      - ./Labs:/Labs
+      - ./Labs/.nuget:/root/.nuget
+    ports:
+      - "127.0.0.1:8080:8080"
+    working_dir: /Labs
+    tty: true
