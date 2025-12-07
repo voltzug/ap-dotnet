@@ -1,0 +1,18 @@
+@* Validation scripts partial with CDN + local fallbacks *@
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    // Fallback to local jQuery if CDN is unavailable
+    window.jQuery || document.write('<script src="@Url.Content("~/lib/jquery/dist/jquery.min.js")"><\/script>');
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script>
+    // Fallback to local jquery.validate if CDN is unavailable
+    (window.jQuery && window.jQuery.validator) || document.write('<script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.min.js")"><\/script>');
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    // Fallback to local unobtrusive adapter if CDN is unavailable
+    (window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive) || document.write('<script src="@Url.Content("~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js")"><\/script>');
+</script>

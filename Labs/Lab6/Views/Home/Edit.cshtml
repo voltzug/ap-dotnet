@@ -1,0 +1,145 @@
+@model Lab6.Models.MovieDto
+
+@{
+    ViewData["Title"] = "Edytuj";
+}
+
+<h1>Edytuj</h1>
+
+<h4>Film</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rating" class="control-label"></label>
+                <input asp-for="Rating" class="form-control" />
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TrailerLink" class="control-label"></label>
+                <input asp-for="TrailerLink" class="form-control" />
+                <span asp-validation-for="TrailerLink" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Gatunek</label>
+
+                <!-- Visible bound input for the genre; JS will keep it synced with the select.
+                     Using asp-for so validation attributes are present on the input. -->
+                <input asp-for="Genre" id="GenreInput" class="form-control" />
+                <span asp-validation-for="Genre" class="text-danger"></span>
+
+                <!-- Dropdown with existing genres and an option to enter a custom one -->
+                <select id="genreSelect" class="form-control mt-2">
+                    <option value="">-- Wybierz gatunek --</option>
+                    @foreach (var g in Model.AllGenres ?? new List<string>())
+                    {
+                        <option value="@g">@g</option>
+                    }
+                    <option value="__custom__">Wpisz inny...</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Zapisz" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Powrót do listy</a>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var select = document.getElementById('genreSelect');
+            var input = document.getElementById('GenreInput');
+
+            function onSelectChange() {
+                var val = select.value;
+                if (val === '__custom__') {
+                    // allow user to type a custom value
+                    input.removeAttribute('readonly');
+                    input.value = '';
+                    input.focus();
+                } else if (!val) {
+                    // no selection: do not overwrite user's typed value
+                } else {
+                    input.value = val;
+                    input.setAttribute('readonly', 'readonly');
+                }
+
+                // Trigger jQuery validation refresh if available
+                if (window.jQuery && typeof $(input).valid === 'function') {
+                    $(input).valid();
+                }
+            }
+
+            function onInputChange() {
+                // If user edits input while select is not custom, clear select if value doesn't match
+                var val = input.value;
+                var matched = false;
+                for (var i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === val) {
+                        select.value = val;
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched) {
+                    // mark as custom
+                    select.value = '__custom__';
+                    input.removeAttribute('readonly');
+                }
+
+                if (window.jQuery && typeof $(input).valid === 'function') {
+                    $(input).valid();
+                }
+            }
+
+            (function init() {
+                var modelVal = '@(Model?.Genre ?? "")';
+                if (!modelVal) {
+                    select.value = '';
+                    input.value = '';
+                    input.removeAttribute('readonly');
+                } else {
+                    var found = false;
+                    for (var i = 0; i < select.options.length; i++) {
+                        if (select.options[i].value === modelVal) {
+                            select.value = modelVal;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        input.value = modelVal;
+                        input.setAttribute('readonly', 'readonly');
+                    } else {
+                        select.value = '__custom__';
+                        input.value = modelVal;
+                        input.removeAttribute('readonly');
+                    }
+                }
+            })();
+
+            if (select) select.addEventListener('change', onSelectChange);
+            if (input) input.addEventListener('input', onInputChange);
+        })();
+    </script>
+}
