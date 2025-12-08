@@ -1,0 +1,33 @@
+@using Lab7.Data
+@model IEnumerable<Lab7.Models.Customer>
+@inject Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Strona główna";
+    var customers = Model?.ToList() ?? new List<Lab7.Models.Customer>();
+}
+
+<h1>Lista klientów</h1>
+
+@if (!customers.Any())
+{
+    <p>Brak klientów do wyświetlenia.</p>
+}
+else
+{
+    <div>
+        <ul>
+            @foreach (var item in customers)
+            {
+                <li>@item.Email</li>
+            }
+        </ul>
+    </div>
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>
+        <a asp-action="MyOrders" class="btn btn-primary">Moje zamówienia</a>
+    </p>
+}

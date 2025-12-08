@@ -1,0 +1,58 @@
+@model IEnumerable<Lab7.Models.Invoice>
+
+@{
+    ViewData["Title"] = "Moje zamówienia";
+    var invoices = Model ?? Enumerable.Empty<Lab7.Models.Invoice>();
+}
+
+<h1>Moje zamówienia</h1>
+
+@if (!invoices.Any())
+{
+    <p>Brak zamówień do wyświetlenia.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.InvoiceId)</th>
+                <th>@Html.DisplayNameFor(model => model.InvoiceDate)</th>
+                <th>@Html.DisplayNameFor(model => model.BillingAddress)</th>
+                <th>@Html.DisplayNameFor(model => model.Total)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in invoices)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="OrderDetails" asp-route-id="@item.InvoiceId">@item.InvoiceId</a>
+                    </td>
+                    <td>
+                        @item.InvoiceDate.ToShortDateString()
+                    </td>
+                    <td>
+                        @{
+                            var parts = new[]
+                            {
+                                item.BillingAddress,
+                                item.BillingCity,
+                                item.BillingState,
+                                item.BillingCountry
+                            }.Where(p => !string.IsNullOrWhiteSpace(p));
+                        }
+                        @string.Join(", ", parts)
+                    </td>
+                    <td>
+                        @item.Total.ToString("C")
+                    </td>
+                    <td>
+                        <a asp-action="OrderDetails" asp-route-id="@item.InvoiceId" class="btn btn-sm btn-outline-primary">Szczegóły</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

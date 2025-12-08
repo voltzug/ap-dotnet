@@ -1,0 +1,92 @@
+@using System.Linq
+@model Lab7.Models.Invoice
+
+@{
+    ViewData["Title"] = "Szczegóły zamówienia";
+}
+
+@if (Model == null)
+{
+    <h1>Szczegóły zamówienia</h1>
+    <p>Nie znaleziono faktury.</p>
+}
+else
+{
+    <h1>Szczegóły zamówienia #@Model.InvoiceId</h1>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Data zamówienia</dt>
+                <dd class="col-sm-8">@Model.InvoiceDate.ToShortDateString()</dd>
+
+                <dt class="col-sm-4">Adres rozliczeniowy</dt>
+                <dd class="col-sm-8">
+                    @{
+                        var addressParts = new[]
+                        {
+                            Model.BillingAddress,
+                            Model.BillingCity,
+                            Model.BillingState,
+                            Model.BillingPostalCode,
+                            Model.BillingCountry
+                        }.Where(p => !string.IsNullOrWhiteSpace(p));
+                    }
+                    @string.Join(", ", addressParts)
+                </dd>
+
+                <dt class="col-sm-4">Kwota łączna</dt>
+                <dd class="col-sm-8">@Model.Total.ToString("C")</dd>
+            </dl>
+        </div>
+    </div>
+
+    <h2>Utwory w zamówieniu</h2>
+
+    var lines = Model.InvoiceLines ?? Enumerable.Empty<Lab7.Models.InvoiceLine>();
+    if (!lines.Any())
+    {
+        <p>Brak pozycji na fakturze.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nazwa utworu</th>
+                    <th>Kompozytor</th>
+                    <th class="text-end">Cena jedn.</th>
+                    <th class="text-end">Ilość</th>
+                    <th class="text-end">Łącznie</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var line in lines)
+                {
+                    var track = line.Track;
+                    decimal lineTotal = 0m;
+                    try
+                    {
+                        lineTotal = line.UnitPrice * line.Quantity;
+                    }
+                    catch
+                    {
+                        lineTotal = 0m;
+                    }
+
+                    <tr>
+                        <td>@(track?.Name ?? "—")</td>
+                        <td>@(track?.Composer ?? "—")</td>
+                        <td class="text-end">@line.UnitPrice.ToString("C")</td>
+                        <td class="text-end">@line.Quantity</td>
+                        <td class="text-end">@lineTotal.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <p>
+        <a asp-action="MyOrders" class="btn btn-secondary">Powrót do listy zamówień</a>
+    </p>
+}

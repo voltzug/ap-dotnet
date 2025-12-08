@@ -1,0 +1,41 @@
+@page
+@using Microsoft.AspNetCore.Mvc
+@{
+    // Layout and title
+    Layout = "/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dostęp zabroniony";
+
+    // Read ReturnUrl from query and ensure it's a local URL to avoid open redirect
+    var returnUrl = Request.Query["ReturnUrl"].ToString();
+    var canReturn = !string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl);
+}
+
+<h1>Dostęp zabroniony</h1>
+
+<p>
+    Nie masz uprawnień do wyświetlenia tej strony. Jeśli uważasz, że to pomyłka, skontaktuj się z administratorem.
+</p>
+
+@if (canReturn)
+{
+    String cleanUrl = returnUrl;
+    // Remove the last 'return url' param in path if present
+    var uri = new Uri(cleanUrl, UriKind.RelativeOrAbsolute);
+    var path = uri.IsAbsoluteUri ? uri.PathAndQuery : returnUrl;
+    var idx = path.LastIndexOf("/");
+    if (idx > 0)
+    {
+        // Remove the last ReturnUrl param and everything after it
+        var before = path.Substring(0, idx);
+        cleanUrl = before;
+    }
+    <p>
+        <a class="btn btn-primary" href="@cleanUrl">Powrót</a>
+    </p>
+}
+else
+{
+    <p>
+        <a class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">Powrót do strony głównej</a>
+    </p>
+}
